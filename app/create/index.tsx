@@ -1,4 +1,3 @@
-// CreatePool.tsx
 import React, { useState } from "react";
 import {
   View,
@@ -9,22 +8,26 @@ import {
   StyleSheet,
 } from "react-native";
 import { useRouter } from "expo-router";
-import DatePicker from "react-native-date-picker";
 import { format } from "date-fns";
 import Header from "@/components/Header";
 import FormInput from "@/components/FormInput";
 import Button from "@/components/Button";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, FONTS, SIZES } from "@/constants/theme";
-import { usePooling } from "../../constants/PoolingContext"; // Import the context
+import { usePooling } from "../../constants/PoolingContext";
+import { DatePickerModal, TimePickerModal} from "react-native-paper-dates";
+
+
 
 export default function CreatePool() {
   const router = useRouter();
-  const { source, setSource, destination, setDestination } = usePooling(); // Use context
+  const { source, setSource, destination, setDestination } = usePooling();
   const [seats, setSeats] = useState("2");
   const [cost, setCost] = useState("");
-  const [departureTime, setDepartureTime] = useState(new Date());
+  const [departureDate, setDepartureDate] = useState<Date | null>(new Date());
+  const [departureTime, setDepartureTime] = useState<Date | null>(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSourcePress = () => {
@@ -47,7 +50,7 @@ export default function CreatePool() {
     if (source === destination) return Alert.alert("Error", "Source and destination cannot be the same.");
     if (!seats || parseInt(seats) < 1 || parseInt(seats) > 3) return Alert.alert("Error", "Seats must be between 1 and 3.");
     if (!cost || isNaN(Number(cost)) || Number(cost) <= 0) return Alert.alert("Error", "Cost must be a valid amount.");
-    if (departureTime <= new Date()) return Alert.alert("Error", "Departure time must be in the future.");
+    if (!departureDate || !departureTime) return Alert.alert("Error", "Please select both date and time.");
     return true;
   };
 
@@ -58,7 +61,7 @@ export default function CreatePool() {
     setTimeout(() => {
       setLoading(false);
       Alert.alert("Success", "Your pool has been created successfully!", [
-        { text: "OK", onPress: () => router.push("/") },
+        { text: "OK", onPress: () => router.push("/homescreen") },
       ]);
     }, 1500);
   };
@@ -73,7 +76,6 @@ export default function CreatePool() {
       >
         <Text style={styles.sectionTitle}>Pool Details</Text>
 
-        {/* Source Selection */}
         <TouchableOpacity onPress={handleSourcePress} activeOpacity={0.7}>
           <FormInput
             label="Source Location"
@@ -85,7 +87,6 @@ export default function CreatePool() {
           />
         </TouchableOpacity>
 
-        {/* Destination Selection */}
         <TouchableOpacity onPress={handleDestinationPress} activeOpacity={0.7}>
           <FormInput
             label="Destination"
@@ -115,30 +116,58 @@ export default function CreatePool() {
           keyboardType="numeric"
         />
 
+        {/* 🛠 Updated Date Picker */}
         <View style={styles.dateContainer}>
-          <Text style={styles.label}>Departure Time</Text>
+          <Text style={styles.label}>Departure Date</Text>
           <TouchableOpacity
             style={styles.datePickerButton}
             onPress={() => setShowDatePicker(true)}
           >
             <Text style={styles.dateText}>
-              {format(departureTime, "MMM d, yyyy h:mm a")}
+              {departureDate ? format(departureDate, "MMM d, yyyy") : "Select Date"}
             </Text>
             <Text style={styles.iconText}>📅</Text>
           </TouchableOpacity>
         </View>
 
-        <DatePicker
-          modal
-          open={showDatePicker}
-          date={departureTime}
-          mode="datetime"
-          minimumDate={new Date()}
-          onConfirm={(date) => {
+        {/* 🛠 Updated Time Picker */}
+        <View style={styles.dateContainer}>
+          <Text style={styles.label}>Departure Time</Text>
+          <TouchableOpacity
+            style={styles.datePickerButton}
+            onPress={() => setShowTimePicker(true)}
+          >
+            <Text style={styles.dateText}>
+              {departureTime ? format(departureTime, "hh:mm a") : "Select Time"}
+            </Text>
+            <Text style={styles.iconText}>⏰</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* 📅 Date Picker Modal */}
+        <DatePickerModal
+          locale="en"
+          mode="single"
+          visible={showDatePicker}
+          date={departureDate}
+          onConfirm={(params) => {
             setShowDatePicker(false);
-            setDepartureTime(date);
+            setDepartureDate(params.date);
           }}
-          onCancel={() => setShowDatePicker(false)}
+          onDismiss={() => setShowDatePicker(false)}
+        />
+
+        {/* ⏰ Time Picker Modal */}
+        <TimePickerModal
+          visible={showTimePicker}
+          onConfirm={({ hours, minutes }) => {
+            const newTime = new Date();
+            newTime.setHours(hours);
+            newTime.setMinutes(minutes);
+            setDepartureTime(newTime);
+            setShowTimePicker(false);
+          }}
+          onDismiss={() => setShowTimePicker(false)}
         />
 
         <Button

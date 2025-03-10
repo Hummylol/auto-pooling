@@ -1,105 +1,134 @@
-import React from 'react';
-import { StyleSheet, View, Text, ImageBackground, SafeAreaView, StatusBar, ActivityIndicator } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useFonts, Poppins_400Regular, Poppins_600SemiBold } from '@expo-google-fonts/poppins';
-import Button from '@/components/Button';
-import { COLORS, SIZES } from '@/constants/theme';
+import React, { useState } from "react";
+import { View, TextInput, Text, StyleSheet } from "react-native";
+import { signUp, login } from "../authService";
+import { useRouter } from "expo-router"; 
+import { COLORS, FONTS } from '@/constants/theme'; 
+import Button from '@/components/Button'; 
 
-export default function Home() {
-  const router = useRouter();
-  let [fontsLoaded] = useFonts({
-    Poppins_400Regular,
-    Poppins_600SemiBold,
-  });
+const AuthScreen = () => {
+  const router = useRouter(); 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoginMode, setIsLoginMode] = useState(true);
+  const [error, setError] = useState("");
 
-  // Show a loader if fonts are not yet loaded
-  if (!fontsLoaded) {
-    return <ActivityIndicator size="large" color={COLORS.primary} />;
-  }
+  const handleAuth = async () => {
+    setError("");
+    try {
+      if (isLoginMode) {
+        await login(email, password);
+        router.push("/homescreen"); 
+      } else {
+        await signUp(email, password);
+        router.push("/homescreen"); 
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message.includes("auth") ? "Invalid credentials. Please try again." : "An error occurred. Please try again.");
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
+    }
+  };
 
   return (
-      <ImageBackground
-        source={{ uri: 'https://images.unsplash.com/photo-1596456838919-a0c5b8f0c4c8?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80' }}
-        style={styles.backgroundImage}
-      >
-        <View style={styles.overlay}>
-          <SafeAreaView style={styles.container}>
-            <StatusBar barStyle="light-content" />
+    <View style={styles.container}>
+      {/* Title */}
+      <Text style={styles.title}>{isLoginMode ? "Sign In" : "Sign Up"}</Text>
 
-            <View style={styles.logoContainer}>
-              <Text style={styles.appName}>Auto Pool</Text>
-              <Text style={styles.tagline}>Share rides, save money</Text>
-            </View>
+      {/* Email Input */}
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        placeholderTextColor={COLORS.gray}
+        value={email}
+        onChangeText={setEmail}
+        keyboardType="email-address"
+        autoCapitalize="none"
+      />
 
-            <View style={styles.buttonContainer}>
-              <Button
-                title="Join Ride"
-                onPress={() => router.push('/join')}
-                icon="group"
-                style={styles.button}
-                textStyle={styles.poptext}
-              />
-              <Button
-                title="Create Ride"
-                onPress={() => router.push('/create')}
-                variant="secondary"
-                icon="add-circle"
-                style={styles.button}
-                textStyle={styles.createButtonText}
-              />
-            </View>
-          </SafeAreaView>
-        </View>
-      </ImageBackground>
+      {/* Password Input */}
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        placeholderTextColor={COLORS.gray}
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
+
+      {/* Error Message */}
+      {error ? <Text style={styles.error}>{error}</Text> : null}
+
+      {/* Sign In / Sign Up Button */}
+      <Button
+        title={isLoginMode ? "Sign In" : "Sign Up"}
+        onPress={handleAuth}
+        variant="primary"
+        icon={isLoginMode ? "login" : "person-add"}
+        style={styles.button}
+        textStyle={styles.createButtonText}
+      />
+
+      {/* Switch between Sign In / Sign Up */}
+      <Button
+        title={`Switch to ${isLoginMode ? "Sign Up" : "Sign In"}`}
+        onPress={() => setIsLoginMode((prev) => !prev)}
+        variant="secondary"
+        icon="swap-horiz"
+        style={styles.switchButton}
+        textStyle={styles.switchText}
+      />
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  backgroundImage: {
-    flex: 1,
-    width: '100%',
-    height: '100%',
-    backgroundColor: "#fff",
-  },
-  overlay: {
-    flex: 1,
-  },
   container: {
     flex: 1,
-    justifyContent: 'space-between',
-    padding: SIZES.padding * 2,
+    justifyContent: "center",
+    padding: 24,
+    backgroundColor: COLORS.white,
   },
-  logoContainer: {
-    alignItems: 'center',
-    marginTop: SIZES.padding * 4,
-  },
-  appName: {
-    fontFamily: 'Poppins_600SemiBold', // Applied Poppins Bold
-    fontSize: SIZES.extraLarge * 1.5,
+  title: {
+    fontSize: 28,
+    fontFamily: FONTS.bold,
     color: COLORS.black,
-    marginBottom: SIZES.base,
+    textAlign: "center",
+    marginBottom: 24,
   },
-  tagline: {
-    fontFamily: 'Poppins_400Regular', // Applied Poppins Regular
-    fontSize: SIZES.medium,
+  input: {
+    height: 50,
+    borderColor: COLORS.gray,
+    borderWidth: 1,
+    borderRadius: 10,
+    marginBottom: 16,
+    paddingHorizontal: 14,
+    fontFamily: FONTS.regular,
     color: COLORS.black,
-    opacity: 0.8,
+    backgroundColor: "#F5F5F5",
   },
-  buttonContainer: {
-    marginBottom: SIZES.padding * 4,
-    gap: SIZES.padding,
-
+  error: {
+    color: COLORS.error,
+    marginBottom: 16,
+    fontFamily: FONTS.regular,
+    textAlign: "center",
   },
   button: {
-    paddingVertical: SIZES.padding * 1.2,
-    borderRadius: SIZES.radius,
-    fontFamily: 'Poppins_400Regular', // Applied Poppins Regular
+    marginVertical: 10,
   },
   createButtonText: {
-    fontFamily: 'Poppins_400Regular', // Applied Poppins Regular
-    color: COLORS.black,
+    color: COLORS.white,
+    fontFamily: FONTS.medium,
   },
-  poptext:{
-    fontFamily: 'Poppins_400Regular', // Applied Poppins Regular
-  }
+  switchButton: {
+    marginTop: 10,
+    alignSelf: "center",
+  },
+  switchText: {
+    fontFamily: FONTS.medium,
+    color: COLORS.primary,
+  },
 });
+
+export default AuthScreen;
