@@ -1,50 +1,57 @@
-# Welcome to your Expo app 👋
+# Auto-Pooling App 🚗
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A React Native mobile application built with Expo that helps users create and join carpools. The app features real-time location tracking, interactive maps, and an intuitive user interface for seamless ride-sharing experiences.
 
-## Get started
+## Features 🌟
 
-1. Install dependencies
+- **Interactive Maps**: Select pickup and drop locations with ease
+- **Location Search**: Search for addresses and places
+- **Real-time Location**: Get current location and address details
+- **Pool Creation**: Create new pools with custom routes
+- **Pool Joining**: Join existing pools that match your route
+- **User Authentication**: Secure Firebase authentication
+- **Clean UI**: Modern and intuitive user interface
 
-   ```bash
-   npm install
-   ```
+## Tech Stack 💻
 
-2. Start the app
+- **Frontend Framework**: React Native with Expo
+- **Navigation**: Expo Router
+- **Maps**: React Native Maps
+- **Authentication**: Firebase Auth
+- **Location Services**: Expo Location
+- **UI Components**: Custom components with TypeScript
+- **State Management**: React Context API
+- **Icons**: Expo Vector Icons
 
-   ```bash
-    npx expo start
-   ```
+## Project Structure 📁
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```
+auto-pooling/
+├── app/                 # Main application screens and routes
+├── components/          # Reusable UI components
+├── constants/          # App-wide constants and configurations
+├── data/              # Data models and types
+├── hooks/             # Custom React hooks
+├── types/             # TypeScript type definitions
+├── assets/            # Static assets (images, fonts)
+└── scripts/           # Utility scripts
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Development
 
-## Learn more
+- The app uses file-based routing with Expo Router
+- Components are built using React Native Paper for consistent UI
+- Firebase handles authentication and backend services
+- TypeScript ensures type safety throughout the application
 
-To learn more about developing your project with Expo, look at the following resources:
+## Contributing
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## Join the community
+## License
 
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This project is licensed under the MIT License - see the LICENSE file for details.

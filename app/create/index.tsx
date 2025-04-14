@@ -16,6 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS, FONTS, SIZES } from "@/constants/theme";
 import { usePooling } from "../../constants/PoolingContext";
 import { DatePickerModal, TimePickerModal} from "react-native-paper-dates";
+import LocationSelector from '@/components/LocationSelector';
 
 
 
@@ -76,27 +77,14 @@ export default function CreatePool() {
       >
         <Text style={styles.sectionTitle}>Pool Details</Text>
 
-        <TouchableOpacity onPress={handleSourcePress} activeOpacity={0.7}>
-          <FormInput
-            label="Source Location"
-            placeholder="Select pickup location"
-            value={source ?? ""}
-            leftIcon="location-on"
-            rightIcon="chevron-right"
-            editable={false}
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={handleDestinationPress} activeOpacity={0.7}>
-          <FormInput
-            label="Destination"
-            placeholder="Select drop location"
-            value={destination ?? ""}
-            leftIcon="location-on"
-            rightIcon="chevron-right"
-            editable={false}
-          />
-        </TouchableOpacity>
+        <LocationSelector 
+          type="source" 
+          label="Pickup Location" 
+        />
+        <LocationSelector 
+          type="destination" 
+          label="Drop Location" 
+        />
 
         <FormInput
           label="Available Seats"

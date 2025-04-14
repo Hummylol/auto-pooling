@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "38805776080",
+    "project_id": "auto-pooling-f1a78",
+    "storage_bucket": "auto-pooling-f1a78.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:38805776080:android:d6c246a1782a73d4d420d5",
+        "android_client_info": {
+          "package_name": "com.HumaidSadath.autopooling"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBXoiokkBGb6LCOWIcFUqNWIKfO5szGNU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
